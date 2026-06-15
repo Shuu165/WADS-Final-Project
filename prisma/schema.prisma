@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Course {
+  id           Int            @id @default(autoincrement())
+  title        String
+  imageSrc     String
+  userProgress UserProgress[]
+  units        Unit[]
+}
+
+model Unit {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  courseId    Int
+  order       Int
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id         Int         @id @default(autoincrement())
+  title      String
+  unitId     Int
+  order      Int
+  unit       Unit        @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  challenges Challenge[]
+}
+
+model Challenge {
+  id                Int                 @id @default(autoincrement())
+  lessonId          Int
+  type              ChallengeType
+  question          String
+  order             Int
+  lesson            Lesson              @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  challengeOptions  ChallengeOption[]
+  challengeProgress ChallengeProgress[]
+}
+
+enum ChallengeType {
+  SELECT
+  ASSIST
+}
+
+model ChallengeOption {
+  id          Int       @id @default(autoincrement())
+  challengeId Int
+  text        String
+  correct     Boolean
+  imageSrc    String?
+  audioSrc    String?
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+}
+
+model ChallengeProgress {
+  id          Int       @id @default(autoincrement())
+  userId      String
+  challengeId Int
+  completed   Boolean   @default(false)
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+}
+
+model UserProgress {
+  userId         String  @id
+  userName       String  @default("User")
+  userImageSrc   String  @default("/mascot.svg")
+  activeCourseId Int?
+  hearts         Int     @default(5)
+  points         Int     @default(0)
+  activeCourse   Course? @relation(fields: [activeCourseId], references: [id], onDelete: Cascade)
+}
+
+model UserSubscription {
+  id                     Int      @id @default(autoincrement())
+  userId                 String   @unique
+  stripeCustomerId       String   @unique
+  stripeSubscriptionId   String   @unique
+  stripePriceId          String
+  stripeCurrentPeriodEnd DateTime
+}  
