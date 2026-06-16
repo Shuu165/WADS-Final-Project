@@ -73,7 +73,6 @@ BinLingo is a Duolingo-inspired language learning web application that gamifies 
 | AI | Google Gemini 2.5 Flash |
 | Payments | Stripe (subscription) |
 | Containerization | Docker + Docker Compose |
-| CI/CD | GitHub Actions |
 | Deployment | VPS + Cloudflare |
 | Version Control | GitHub |
 
@@ -360,21 +359,15 @@ The application is containerized using a multi-stage Docker build:
 2. **builder** — generates Prisma client and builds Next.js
 3. **runner** — minimal production image with only necessary files
 
-### 11.2 CI/CD Pipeline
+### 11.2 Production Environment
 
-GitHub Actions workflow (`.github/workflows/cicd.yml`) automates:
-1. **Build job** — builds Docker image and pushes to Docker Hub
-2. **Deploy job** — runs on self-hosted VPS runner, creates `.env.production` from GitHub Secrets, pulls latest image, and restarts container
-
-### 11.3 Production Environment
-
-- Environment variables managed via GitHub Secrets → `.env.production`
-- `FIREBASE_PRIVATE_KEY` handled with `printf` to preserve newlines
+- Environment variables managed via `.env.production` on the VPS
+- `FIREBASE_PRIVATE_KEY` stored with escaped newlines
 - Session cookies set with `httpOnly: true`, `secure: true`
 - All API keys server-side only, never in client bundle
 - HTTPS enforced via Cloudflare
 
-### 11.4 Live Application URL
+### 11.3 Live Application URL
 
 [https://e2526-wads-b4ac-03.csbihub.id](https://e2526-wads-b4ac-03.csbihub.id)
 
@@ -502,39 +495,56 @@ docker compose up --build
 
 ## 17. Deployment Instructions
 
-### CI/CD (Recommended)
+### Prerequisites on VPS
+- Docker and Docker Compose installed
+- SSH access to VPS
 
-Push to `master` or `main` branch — GitHub Actions automatically builds and deploys.
+### Steps
 
-Required GitHub Secrets:
-- `DOCKER_USERNAME`, `DOCKER_PASSWORD`
-- `DATABASE_URL`, `DIRECT_URL`
-- `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`
-- `NEXT_PUBLIC_FIREBASE_*` (all Firebase public config values)
-- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`
-- `NEXT_PUBLIC_APP_URL`
-- `GEMINI_API_KEY`
+1. SSH into the VPS:
+```bash
+ssh -p 3012 usergc28@e2526-wads-b4ac-03.csbihub.id
+```
 
-### Manual Deployment
+2. Navigate to the project directory:
+```bash
+cd ~/actions-runner/_work/WADS-Final-Project/WADS-Final-Project
+```
 
-1. SSH into VPS
-2. Pull the latest Docker image:
+3. Login to Docker Hub:
+```bash
+docker login -u yourdockerhubusername
+```
+
+4. Create `.env.production` with all environment variables:
+```bash
+nano .env.production
+```
+
+5. Pull the latest image:
 ```bash
 docker pull yourdockerhubusername/bilingnus:latest
 ```
-3. Create `.env.production` with all environment variables
-4. Run:
+
+6. Start the container:
 ```bash
 docker compose up -d
+```
+
+7. Verify it's running:
+```bash
+docker compose logs web --tail=20
+```
+
+### Updating the Application
+
+When new code is pushed to Docker Hub:
+```bash
+docker pull yourdockerhubusername/bilingnus:latest
+docker compose up -d --no-deps web
+docker image prune -f
 ```
 
 ### Stripe Webhook (Production)
 
 Set webhook URL in Stripe Dashboard to:
-```
-https://e2526-wads-b4ac-03.csbihub.id/api/webhooks/stripe
-```
-
-Events to listen for:
-- `checkout.session.completed`
-- `invoice.payment_succeeded`
