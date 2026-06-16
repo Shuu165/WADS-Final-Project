@@ -1,5 +1,6 @@
 services:
   web:
+    image: ${DOCKER_USERNAME:-local}/bilingnus:latest
     build:
       context: .
       dockerfile: Dockerfile
