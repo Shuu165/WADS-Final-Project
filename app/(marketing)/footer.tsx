@@ -6,24 +6,24 @@ export const Footer = () => {
         <footer className="hidden lg:block h-20 w-full border-t-2 border-slate-200 p-2">
             <div className="max-w-screen-lg mx-auto flex items-center justify-evenly h-full">
                 <Button size="lg" variant="ghost" className="text-sm"> 
-                    <Image src="/US.svg" height={32} width={40} alt="United States" className="mr-4 rounded-md"/>
-                    English
-                </Button>
-                <Button size="lg" variant="ghost" className="text-sm"> 
-                    <Image src="/ID.svg" height={32} width={40} alt="Indonesia" className="mr-4 rounded-md"/>
+                    <Image src="/id.svg" height={32} width={40} alt="Indonesia" className="mr-4 rounded-md" unoptimized/>
                     Indonesian
                 </Button>
                 <Button size="lg" variant="ghost" className="text-sm"> 
-                    <Image src="/CN.svg" height={32} width={40} alt="China" className="mr-4 rounded-md"/>
+                    <Image src="/cn.svg" height={32} width={40} alt="China" className="mr-4 rounded-md" unoptimized/>
                     Chinese
                 </Button>
                 <Button size="lg" variant="ghost" className="text-sm"> 
-                    <Image src="/JP.svg" height={32} width={40} alt="Japan" className="mr-4 rounded-md"/>
+                    <Image src="/jp.svg" height={32} width={40} alt="Japan" className="mr-4 rounded-md" unoptimized/>
                     Japanese
                 </Button>
                 <Button size="lg" variant="ghost" className="text-sm"> 
-                    <Image src="/KR.svg" height={32} width={40} alt="South Korea" className="mr-4 rounded-md"/>
+                    <Image src="/kr.svg" height={32} width={40} alt="South Korea" className="mr-4 rounded-md" unoptimized/>
                     Korean
+                </Button>
+                <Button size="lg" variant="ghost" className="text-sm"> 
+                    <Image src="/de.svg" height={32} width={40} alt="Deutch" className="mr-4 rounded-md" unoptimized/>
+                    Deutch
                 </Button>
             </div>
         </footer>
