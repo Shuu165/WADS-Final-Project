@@ -10,6 +10,8 @@ services:
         FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}
     ports:
       - "3012:3000"
+    env_file:
+      - .env.production
     environment:
       # Database
       DATABASE_URL: ${DATABASE_URL}

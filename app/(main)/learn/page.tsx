@@ -17,6 +17,7 @@ const LearnPage = async () => {
 
     try {
         const session = (await cookies()).get("session")?.value;
+        console.log("Session cookie on learn page:", session ? "exists" : "missing");
         if (session) {
             const decoded = await adminAuth.verifySessionCookie(session);
             userId = decoded.uid;
