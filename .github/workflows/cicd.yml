@@ -111,7 +111,7 @@ jobs:
 
       - name: Remove temporary env file
         if: always()
-        run: rm - f .env.production
+        run: rm -f .env.production
 
       - name: Cleanup dangling images
-        run: docker image prune - f
+        run: docker image prune -f
