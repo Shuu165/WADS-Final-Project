@@ -164,7 +164,7 @@ BinLingo is a Duolingo-inspired language learning web application that gamifies 
 
 ### 6.2 API Documentation
 
-Postman Collection: [BinLingo API Collection](https://www.postman.com)
+Postman Collection: [BinLingo API Collection] (https://github.com/Shuu165/WADS-Final-Project-API)
 
 Example request — Get AI Hint:
 ```json
