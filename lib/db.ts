@@ -6,9 +6,9 @@ let prisma: PrismaClient | null = null;
 function createPrismaClient() {
   if (prisma) return prisma;
   
-  const adapter = new PrismaPg({ 
-    connectionString: process.env.DIRECT_URL ?? "postgresql://placeholder",
-  });
+  const connectionString = process.env.DIRECT_URL ?? "postgresql://placeholder:placeholder@localhost:5432/placeholder";
+  
+  const adapter = new PrismaPg({ connectionString });
   prisma = new PrismaClient({ adapter });
   return prisma;
 }

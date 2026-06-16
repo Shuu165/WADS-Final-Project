@@ -3,6 +3,9 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { adminAuth } from "@/lib/firebase-admin";
+import { rateLimit } from "@/lib/rate-limit";
+import { sanitizeInput } from "@/lib/sanitize";
+import { validateCsrf } from "@/lib/csrf";
 
 type Message = {
     role: "user" | "model";
@@ -10,7 +13,15 @@ type Message = {
 };
 
 export const POST = async (req: Request) => {
+    if (!validateCsrf(req)) {
+        return new NextResponse("Forbidden", { status: 403 });
+    }
+    const ip = req.headers.get("x-forwarded-for") ?? "unknown";
+    if (!rateLimit(`chat:${ip}`, 20, 60000)) {
+        return new NextResponse("Too many requests", { status: 429 });
+    }
     let userId: string | null = null;
+
     try {
         const session = (await cookies()).get("session")?.value;
         if (session) {
@@ -24,6 +35,12 @@ export const POST = async (req: Request) => {
     if (!userId) return new NextResponse("Unauthorized", { status: 401 });
 
     const { message, history, language } = await req.json();
+    const sanitizedMessage = sanitizeInput(message);
+    const sanitizedLanguage = sanitizeInput(language);
+    const sanitizedHistory = history.map((msg: any) => ({
+        role: msg.role,
+        text: sanitizeInput(msg.text),
+    }));
 
     const systemPrompt = `You are a friendly ${language} language tutor having a conversation with a language learner. 
 Follow these rules strictly:

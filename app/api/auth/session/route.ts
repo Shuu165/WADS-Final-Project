@@ -3,8 +3,12 @@ export const dynamic = 'force-dynamic';
 import { adminAuth } from "@/lib/firebase-admin";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { validateCsrf } from "@/lib/csrf";
 
 export async function POST(req: NextRequest) {
+  if (!validateCsrf(req)) {
+        return new NextResponse("Forbidden", { status: 403 });
+    }
   const { idToken } = await req.json();
 
   const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days

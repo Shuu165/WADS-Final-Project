@@ -3,8 +3,18 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { adminAuth } from "@/lib/firebase-admin";
+import { rateLimit } from "@/lib/rate-limit";
+import { sanitizeInput } from "@/lib/sanitize";
+import { validateCsrf } from "@/lib/csrf";
 
 export const POST = async (req: Request) => {
+    if (!validateCsrf(req)) {
+        return new NextResponse("Forbidden", { status: 403 });
+    }
+    const ip = req.headers.get("x-forwarded-for") ?? "unknown";
+    if (!rateLimit(`hint:${ip}`, 10, 60000)) {
+        return new NextResponse("Too many requests", { status: 429 });
+    }
     let userId: string | null = null;
 
     try {
@@ -20,6 +30,12 @@ export const POST = async (req: Request) => {
     if (!userId) return new NextResponse("Unauthorized", { status: 401 });
 
     const { question, options, language } = await req.json();
+    const sanitizedQuestion = sanitizeInput(question);
+    const sanitizedLanguage = sanitizeInput(language);
+    const sanitizedOptions = options.map((o: any) => ({
+        text: sanitizeInput(o.text),
+        correct: o.correct,
+    }));
 
     const correctOption = options.find((o: any) => o.correct);
 

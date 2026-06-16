@@ -5,8 +5,14 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { rateLimit } from "@/lib/rate-limit";
+import { sanitizeInput } from "@/lib/sanitize";
 
 export async function POST(req: Request) {
+    const ip = req.headers.get("x-forwarded-for") ?? "unknown";
+    if (!rateLimit(`stripe:${ip}`, 20, 60000)) {
+        return new NextResponse("Too many requests", { status: 429 });
+    }
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
         apiVersion: "2026-05-27.dahlia",
     });
