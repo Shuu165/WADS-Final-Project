@@ -5,5 +5,12 @@ export function validateCsrf(req: Request): boolean {
     if (!origin || !host) return false;
 
     const originHost = new URL(origin).host;
-    return originHost === host;
+    
+    const allowedOrigins = [
+        host,
+        "e2526-wads-b4ac-03.csbihub.id",
+        "localhost:3000",
+    ];
+
+    return allowedOrigins.includes(originHost);
 }

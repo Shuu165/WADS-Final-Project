@@ -31,7 +31,7 @@ export default function Home() {
 
         {mounted && !loading && !user && (
           <div className="flex flex-col items-center gap-y-3 w-full max-w-[330px]">
-            <Button onClick={() => router.push("/register")} size="lg" variant="primary" className="w-full">
+            <Button onClick={() => router.push("/sign-up")} size="lg" variant="primary" className="w-full">
               Get started
             </Button>
             <Button onClick={() => router.push("/login")} size="lg" variant="secondaryOutline" className="w-full">
