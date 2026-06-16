@@ -9,7 +9,7 @@ services:
         FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL}
         FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}
     ports:
-      - "3000:3000"
+      - "3012:3000"
     environment:
       # Database
       DATABASE_URL: ${DATABASE_URL}
