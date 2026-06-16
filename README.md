@@ -377,17 +377,15 @@ The application is containerized using a multi-stage Docker build:
 
 ### Farrell Raffelino Sunarman (Shuu165)
 - Features implemented: Full lesson/quiz flow, hearts system, AI hint system, AI conversation practice, shop, quests, leaderboard, Docker setup, CI/CD pipeline
-- API endpoints handled: /api/hint, /api/chat, /api/auth/session, /api/webhooks/stripe
-- Tests written: Frontend testing, AI functionality testing, security testing
+- API endpoints handled: /api/courses, /api/units, /api/lessons, /api/challenges, /api/challengeOption, /api/hint, /api/chat, /api/auth/session, /api/webhooks/stripe
+- Tests written: Frontend testing, AI functionality testing, security testing, API testing (Postman collection), backend testing
 - Security work: Rate limiting, CSRF protection, XSS sanitization, session cookie configuration
 - AI-related work: Gemini API integration for hint system and conversation practice
 
 ### Muhammad Ryan Ismail Putra (muhammadRyanismail)
-- Features implemented: Admin panel, all CRUD API routes, course/unit/lesson/challenge management, Stripe subscription
-- API endpoints handled: /api/courses, /api/units, /api/lessons, /api/challenges, /api/challengeOptions
-- Tests written: API testing (Postman collection), backend testing
-- Security work: Admin role-based access control, Firebase Admin SDK integration
-- AI-related work: AI testing documentation, prompt engineering
+- Features implemented: UI/UX Frontend Design
+- Tests written: Frontend testing 
+- AI-related work: Prompt Modals Engineer
 
 ---
 
@@ -407,7 +405,7 @@ All AI-generated code was reviewed, understood, and modified by the team before 
 ### Current Limitations
 - Hint system resets per lesson session (not persisted across sessions)
 - Conversation practice does not include speech-to-text or pronunciation analysis
-- Only 2 lessons seeded per language (Colors, Animals, Food lessons pending content)
+- Only 2 lessons seeded per language (Colors, Animals, Food, lessons, pending content)
 - Rate limiting is in-memory (resets on server restart; not distributed across multiple instances)
 - Stripe webhook requires running `stripe listen` in local development
 
@@ -433,7 +431,7 @@ All AI-generated code was reviewed, understood, and modified by the team before 
 We declare that:
 - This project is our own work
 - AI usage is disclosed honestly above
-- All group members understand the full system
+- All group members will try to understand the chaotic system
 
 Signed by Group Members:
 - Farrell Raffelino Sunarman
