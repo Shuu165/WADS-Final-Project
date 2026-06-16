@@ -396,7 +396,7 @@ The application is containerized using a multi-stage Docker build:
 | Google Gemini 2.5 Flash | Core AI feature — hint generation and conversation practice | Runtime AI responses in /api/hint and /api/chat |
 | Claude (Anthropic) | Development assistance — code suggestions, debugging, architecture advice | API route structure, Docker configuration, security middleware, testing documentation |
 
-All AI-generated code was reviewed, understood, and modified by the team before use. Every team member can explain the full system including AI integration, security decisions, and testing approach.
+All AI-generated code was reviewed, understood, and modified by the team before use.
 
 ---
 
