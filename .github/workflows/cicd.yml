@@ -72,7 +72,7 @@ jobs:
           python3 - <<'PYEOF'
           import os
 
-          vars = [
+          lines = [
             "NODE_ENV=production",
             f"DATABASE_URL={os.environ['DATABASE_URL']}",
             f"DIRECT_URL={os.environ['DIRECT_URL']}",
@@ -91,12 +91,9 @@ jobs:
             f"NEXT_PUBLIC_APP_URL={os.environ['NEXT_PUBLIC_APP_URL']}",
             f"GEMINI_API_KEY={os.environ['GEMINI_API_KEY']}",
           ]
-          
-          with open('.env.production', 'w') as f:
-            f.write('\n'.join(vars) + '\n')
-
-          print("✅ .env.production created successfully")
-            PYEOF  
+          open('.env.production', 'w').write('\n'.join(lines) + '\n')
+          print('env file created')
+          " 
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
