@@ -69,25 +69,34 @@ jobs:
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          cat > .env.production << 'ENVEOF'
-          NODE_ENV=production
-          ENVEOF
-          echo "DATABASE_URL=${DATABASE_URL}" >> .env.production
-          echo "DIRECT_URL=${DIRECT_URL}" >> .env.production
-          echo "NEXT_PUBLIC_FIREBASE_API_KEY=${NEXT_PUBLIC_FIREBASE_API_KEY}" >> .env.production
-          echo "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}" >> .env.production
-          echo "NEXT_PUBLIC_FIREBASE_PROJECT_ID=${NEXT_PUBLIC_FIREBASE_PROJECT_ID}" >> .env.production
-          echo "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}" >> .env.production
-          echo "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}" >> .env.production
-          echo "NEXT_PUBLIC_FIREBASE_APP_ID=${NEXT_PUBLIC_FIREBASE_APP_ID}" >> .env.production
-          echo "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=${NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID}" >> .env.production
-          echo "FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}" >> .env.production
-          echo "FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}" >> .env.production
-          printf 'FIREBASE_PRIVATE_KEY=%s\n' "${FIREBASE_PRIVATE_KEY}" >> .env.production
-          echo "STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" >> .env.production
-          echo "STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}" >> .env.production
-          echo "NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}" >> .env.production
-          echo "GEMINI_API_KEY=${GEMINI_API_KEY}" >> .env.production
+          python3 - <<'PYEOF'
+          import os
+
+          vars = [
+            "NODE_ENV=production",
+            f"DATABASE_URL={os.environ['DATABASE_URL']}",
+            f"DIRECT_URL={os.environ['DIRECT_URL']}",
+            f"NEXT_PUBLIC_FIREBASE_API_KEY={os.environ['NEXT_PUBLIC_FIREBASE_API_KEY']}",
+            f"NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN={os.environ['NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN']}",
+            f"NEXT_PUBLIC_FIREBASE_PROJECT_ID={os.environ['NEXT_PUBLIC_FIREBASE_PROJECT_ID']}",
+            f"NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET={os.environ['NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET']}",
+            f"NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID={os.environ['NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID']}",
+            f"NEXT_PUBLIC_FIREBASE_APP_ID={os.environ['NEXT_PUBLIC_FIREBASE_APP_ID']}",
+            f"NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID={os.environ['NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID']}",
+            f"FIREBASE_PROJECT_ID={os.environ['FIREBASE_PROJECT_ID']}",
+            f"FIREBASE_CLIENT_EMAIL={os.environ['FIREBASE_CLIENT_EMAIL']}",
+            f"FIREBASE_PRIVATE_KEY={os.environ['FIREBASE_PRIVATE_KEY']}",
+            f"STRIPE_SECRET_KEY={os.environ['STRIPE_SECRET_KEY']}",
+            f"STRIPE_WEBHOOK_SECRET={os.environ['STRIPE_WEBHOOK_SECRET']}",
+            f"NEXT_PUBLIC_APP_URL={os.environ['NEXT_PUBLIC_APP_URL']}",
+            f"GEMINI_API_KEY={os.environ['GEMINI_API_KEY']}",
+          ]
+          
+          with open('.env.production', 'w') as f:
+            f.write('\n'.join(vars) + '\n')
+
+          print("✅ .env.production created successfully")
+            PYEOF  
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -105,7 +114,7 @@ jobs:
 
       - name: Remove temporary env file
         if: always()
-        run: rm -f .env.production
+        run: rm - f .env.production
 
       - name: Cleanup dangling images
-        run: docker image prune -f
+        run: docker image prune - f
